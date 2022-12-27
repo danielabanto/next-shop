@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form'
 
 import { AuthLayout } from '../../components/layouts'
 import { validations } from '../../utils'
-import { useAuthContext } from '../../context'
+// import { useAuthContext } from '../../context'
 
 type FormData = {
   email: string,
@@ -20,7 +20,7 @@ type FormData = {
 const LoginPage = () => {
 
   const router = useRouter()
-  const { loginUser } = useAuthContext()
+  // const { loginUser } = useAuthContext()
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
   const [ showError, setShowError] = useState(false)
   const [ providers, setProviders ] = useState<any>({})

@@ -4,7 +4,6 @@ import { IUser } from '../../interfaces';
 import { tesloApi } from '../../api';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
 
 export interface AuthState {
@@ -19,7 +18,6 @@ const AUTH_INITIAL_STATE: AuthState = {
 
 export const AuthProvider:FC = ({ children }) => {
   const [ state, dispatch ] = useReducer(authReducer, AUTH_INITIAL_STATE)
-  const router = useRouter()
 
   const { data, status } = useSession()
 
@@ -33,18 +31,18 @@ export const AuthProvider:FC = ({ children }) => {
   //   checkToken()  
   // }, [])
 
-  const checkToken = async() => {
-    if ( !Cookies.get('token') ) return
+  // const checkToken = async() => {
+  //   if ( !Cookies.get('token') ) return
 
-    try{
-      const { data } = await tesloApi.get('user/validate-token')
-      const { token, user} = data
-      Cookies.set('token', token)
-      dispatch({ type: '[Auth] - Login', payload: user })
-    } catch (err) { 
-      Cookies.remove('token')
-    }
-  }
+  //   try{
+  //     const { data } = await tesloApi.get('user/validate-token')
+  //     const { token, user} = data
+  //     Cookies.set('token', token)
+  //     dispatch({ type: '[Auth] - Login', payload: user })
+  //   } catch (err) { 
+  //     Cookies.remove('token')
+  //   }
+  // }
   
 
   const loginUser = async( email: string, password: string ): Promise<boolean> => {
@@ -98,9 +96,6 @@ export const AuthProvider:FC = ({ children }) => {
     
     signOut()
     
-    // Cookies.remove('token')
-    // Hard Refresh 
-    // router.reload()
   }
 
   return (

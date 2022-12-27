@@ -1,7 +1,9 @@
 import { FC, useEffect, useReducer } from 'react'
 import Cookie from 'js-cookie'
-import { ICartProduct, ShippingAddress } from '../../interfaces'
+import { ICartProduct, IOrder, ShippingAddress } from '../../interfaces'
 import { CartContext, cartReducer } from './'
+import { tesloApi } from '../../api';
+import axios from 'axios';
 
 export interface CartState {
   isLoaded: boolean;
@@ -100,6 +102,45 @@ export const CartProvider:FC = ({ children }) => {
     dispatch({type:'[Cart] - Update Address', payload: data})
   }
 
+  const createOrder = async () :Promise<{ hasError: boolean; message: string }> => {
+    if ( !state.shippingAddress) {
+      throw new Error('No hay direccion de entrega')
+    }
+
+    const body: IOrder = {
+      orderItems: state.cart.map( p => ({
+        ...p,
+        size: p.size!
+      })),
+      shippingAddress: state.shippingAddress,
+      numberOfItems: state.numberOfItems,
+      subTotal: state.subtotal,
+      tax: state.tax,
+      total: state.total,
+      isPaid: false,
+    }
+
+    try{
+      const { data } = await tesloApi.post<IOrder>('/orders', body)
+      dispatch({ type:'[Cart] - order complete' })
+      return {
+        hasError: false,
+        message: data._id!
+      }
+    } catch(err) {
+      if (axios.isAxiosError(err)) {
+        return{
+          hasError: true,
+          message: err.response?.data.message
+        }
+      }
+      return {
+        hasError: true,
+        message: 'Error no controlado, hable con el administrador'
+      }
+    }
+  }
+
   return (
     <CartContext.Provider 
       value={{
@@ -107,7 +148,8 @@ export const CartProvider:FC = ({ children }) => {
         addProductToCart, 
         updateCartQuantity, 
         removeCartProduct,
-        updateAddress
+        updateAddress,
+        createOrder
       }}
     >
       { children }
