@@ -47,9 +47,9 @@ async function createOrder(req: NextApiRequest, res: NextApiResponse<Data>) {
     if (total !== backendTotal) {
       throw new Error('El total no cuadra con el monto')
     }
-    console.log({ session })
+    // console.log({ session })
     const user : any = session.user
-    console.log({user})
+    // console.log({user})
     const { _id: userId } = user || {}
     if( !userId ) {
       throw new Error('El usuario no esta autenticado')

@@ -113,7 +113,7 @@ const LoginPage = () => {
                   if ( provider.id === 'credentials' ) return <div key='credentials'></div>
                   return (
                     <Button 
-                      key={provider.key} 
+                      key={provider.id} 
                       variant='outlined' 
                       fullWidth 
                       color='primary'
