@@ -11,6 +11,10 @@ export const getProductBySlug = async( slug:string ): Promise<IProduct | null> =
     return null
   }
 
+  product.images = product.images.map( img => (
+    img.includes('http') ? img : `${ process.env.HOST_NAME}products/${ img }`
+  ))
+
   // Usualmente se usa el JSON.parse y stringify cuando hay que serealizar el id, fechas...
   return JSON.parse( JSON.stringify( product ) )
 }
@@ -37,7 +41,14 @@ export const getProductsByTerm = async (term: string): Promise<IProduct[]> => {
 
   await db.disconnect()
 
-  return products
+  const updatedProducts = products.map( product => {
+    product.images = product.images.map( img => (
+      img.includes('http') ? img : `${ process.env.HOST_NAME}products/${ img }`
+    ))
+    return product
+  })
+
+  return updatedProducts
 }
 
 export const getAllProducts = async (): Promise<IProduct[]> => {
@@ -48,5 +59,12 @@ export const getAllProducts = async (): Promise<IProduct[]> => {
 
   await db.disconnect()
 
-  return JSON.parse( JSON.stringify( products ) )
+  const updatedProducts = products.map( product => {
+    product.images = product.images.map( img => (
+      img.includes('http') ? img : `${ process.env.HOST_NAME}products/${ img }`
+    ))
+    return product
+  })
+
+  return JSON.parse( JSON.stringify( updatedProducts ) )
 }
