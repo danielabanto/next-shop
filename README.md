@@ -24,3 +24,9 @@ Llamara:
 ```
 http://localhost:3000/api/seed
 ```
+
+
+
+
+### Despliegue NextAuth
+Es escencial agregar NEXAUTH_URL en caso de no desplegar en Vercel y tmb en los settings de Github
